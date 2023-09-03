@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MRM Imagine That Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{{ url_for('static', filename='page-flip.browser.js') }}"></script>
+</head>
+
+<body>
+    <div class="w-full mt-10 mb-5 flex justify-center">
+        <span class="bg-violet-900 text-stone-200 rounded-lg mx-auto text-2xl font-bold p-4">MRM Imagine That
+            Demo</span>
+    </div>
+
+    <form id="inputForm" class="max-w-lg mx-auto pt-1 p-6 bg-stone-200 shadow-lg rounded-md">
+        <div class="mb-4 p-3">
+            <p>Please enter some information for your child. This information will be used to generate a personalized
+                storybook. None of this information will be saved.</p>
+        </div>
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-600">Child's First Name:</label>
+            <input type="text" id="name" value="Kyle" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+        <div class="mb-4">
+            <label for="age" class="block text-sm font-medium text-gray-600">Child's Age:</label>
+            <input type="text" id="age" value="13" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+        <div class="mb-4">
+            <label for="guardian" class="block text-sm font-medium text-gray-600">Child's Guardian:</label>
+            <input type="text" id="guardian" value="Donald" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+        <div class="mb-4">
+            <label for="illness" class="block text-sm font-medium text-gray-600">Child's Illness:</label>
+            <input type="text" id="illness" value="Cancer" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+        <div class="mb-4">
+            <label for="hope" class="block text-sm font-medium text-gray-600">Child's Hope:</label>
+            <input type="text" id="hope" value="Get better" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+        <div class="mb-4">
+            <label for="fear" class="block text-sm font-medium text-gray-600">Child's Fear:</label>
+            <input type="text" id="fear" value="Spiders" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+        <button class="w-full rounded-lg bg-cyan-700 hover:bg-green-600 text-white font-bold p-3" type="button"
+            onclick="sendMessage()" id="sendForm">Generate Your Storybook!</button>
+    </form>
+
+
+    <div class="w-full">
+        <h2 id="status" class="mt-10 text-2xl text-center"></h2>
+        <h4 id="detailedStatus" class="mt-5 text-md italic text-stone-700 text-center"></h4>
+    </div>
+
+    <div id="outlineContainer" class="w-full mt-10 mb-5 flex justify-center">
+        <div class="max-w-xl w-full">
+            <h2 class="w-full mt-10 text-lg text-center" id="outlineStatus"></h2>
+            <h4 class="w-full mt-5 text-2xl font-bold text-center" id="title"></h4>
+            <h4 class="w-full mt-5 text-lg text-center underline">Setting</h4>
+            <h4 class="w-full text-md text-center" id="setting"></h4>
+            <h4 class="w-full mt-5 text-lg text-center underline">Characters</h4>
+            <h4 class="w-full text-md text-center" id="characters"></h4>
+        </div>
+    </div>
+
+    <div id="book">
+        <div class="my-page even-page" data-density="hard">
+            Page Cover
+        </div>
+        <div class="my-page odd-page" data-density="soft">
+            Page one
+        </div>
+        <div class="my-page even-page" data-density="soft">
+            Page two
+        </div>
+        <div class="my-page odd-page" data-density="soft">
+            Page three
+        </div>
+        <div class="my-page even-page" data-density="soft">
+            Page four
+        </div>
+        <div class="my-page odd-page" data-density="hard">
+            Last page
+        </div>
+    </div> -->
+
+    <script>
+        const nameInput = document.getElementById('name');
+        let current_generation_state = null;
+        let statusInterval = null;
+
+        const status_messages = {
+            "outline": [
+                "Gathering magical fairy dust for the perfect story outline!",
+                "Summoning tiny story gnomes to craft your tale's blueprint!",
+                "Cooking up the juiciest plot twists in our story cauldron!",
+                "Whispering to the story elves... A plot is brewing!",
+                "Fishing in the stream of dreams for a fantastic outline...",
+                "Knitting together a blanket of adventures, one thread at a time!",
+                "Unrolling the treasure map of your next great adventure!",
+                "Whispering secrets to the Plot Oracle... Stay tuned!",
+                "Crafting the bones for a story that'll tickle your funny bone!",
+                "Whispering secrets to story sprites for a plot worth its weight in gold!",
+                "Spinning our idea wheel. Hang on, inspiration incoming!",
+                "Plot-brewing in progress... Hope the story goblins don't toss in any unexpected ingredients!",
+            ],
+            "outline_details": [
+                "Awesome! Your story outline is ready. We've picked a magical setting and some characters who are already arguing about who gets to be the hero!",
+                "Conjuring magical worlds... Just finalized our title, met some quirky characters, and picked the perfect spot for our tale. Hold on, the enchantment's about to begin!",
+                "Cookin' up a magical tale! Here's a sneak peek of our recipe: title, setting, and characters! Hungry for the story? Just a moment!",
+                "Hang tight! The magic quill is just setting the stage, naming our heroes, and dreaming up far-off places. Your storybook is taking shape!",
+                "Cooking up an enchanting outline! Hang tight, our magical bookworms are introducing the title, setting, and characters...",
+            ],
+            "content": [
+                "Once upon a time, in a land of zeros and ones, your story is being woven...",
+                "Feeding the story dragon some imagination snacks! Hang tight.",
+                "Dropping magic beans onto the page... let's watch the story grow!",
+                "Churning the butter of creativity for the smoothest story!",
+                "Rolling out the carpet to the land of imagination...",
+                "Filling our story quill with enchanted ink. Almost there!",
+                "Our storytelling hamster is running at full speed on his idea wheel!",
+                "Sewing together sentences, one magical thread at a time!",
+                "Hitching a ride on the Imagination Express. Next stop: Storyville!",
+                "Churning the story butter to spread on fresh fairy tale toast!",
+                "Shh... The tale-telling tree is dropping its narrative leaves. Gathering them now!",
+                "Setting our narrative compass, charting the course for an epic tale!",
+            ],
+            "images": [
+                "Painting with rainbow and unicorn brushes... Stay tuned!",
+                "Calling all doodle sprites to sprinkle their artsy magic!",
+                "Our picture pixies are hard at work, crafting visuals dreams are made of!",
+                "Casting a colorful spell for picture-perfect pages!",
+                "Our magic photo fairies are snapping their finest shots!",
+                "Waving our illustration wand... Pictures incoming!",
+                "Blowing up visual magic balloons for your story's parade!",
+                "Our color elves are picking just the right shades for each page!",
+                "Cranking the Illustration Machine to max fun levels!",
+                "Easel's up! Watch as colors dance to the rhythm of imagination.",
+                "Dipping brushes into dreams and painting your visual journey!",
+                "Image elves at work: Crafting scenes, one sprinkle of wonder at a time!"
+            ]
+        }
+
+        function getRandomStatusMessage(key) {
+            const arrayLength = status_messages[key].length;
+            const randomIndex = Math.floor(Math.random() * arrayLength);
+            return status_messages[key][randomIndex];
+        }
+
+        // Sometimes the character name and desc will be delimited with a comma instead of a colon
+        function stripNonLettersFromEnd(str) {
+            return str.replace(/[^a-zA-Z]+$/, '');
+        }
+
+        const pageFlip = new St.PageFlip(document.getElementById('book'), {
+            width: 400,
+            height: 600,
+            showCover: true
+        });
+
+        // pageFlip.loadFromHTML(document.querySelectorAll('.my-page'));
+
+        nameInput.addEventListener('blur', function () {
+            document.getElementById('sendForm').innerText = `Generate ${nameInput.value}'s Storybook!`;
+        });
+
+        var ws = new WebSocket('ws://127.0.0.1:5000/ws');
+
+        ws.onopen = function (event) {
+            console.log("Connected to the websocket");
+        };
+
+        function sendMessage() {
+            document.getElementById('inputForm').style.display = 'none';
+            var formData = {
+                name: nameInput.value,
+                age: document.getElementById('age').value,
+                guardian: document.getElementById('guardian').value,
+                illness: document.getElementById('illness').value,
+                hope: document.getElementById('hope').value,
+                fear: document.getElementById('fear').value,
+            };
+
+            ws.send(JSON.stringify(formData));
+        }
+
+        ws.onmessage = function (event) {
+            console.log(event.data)
+            const response = JSON.parse(event.data)
+            console.log(response);
+
+            if (response.status == "error") {
+                document.getElementById('status').innerHTML = response.output;
+            } else if (response.status == "complete") {
+                clearInterval(statusInterval);
+                document.getElementById('status').style.display = 'none';
+                document.getElementById('detailedStatus').style.display = 'none';
+                document.getElementById('outlineContainer').style.display = 'none';
+            } else if (response.status == "generating") {
+                if (current_generation_state != response.output) {
+                    current_generation_state = response.output;
+                    clearInterval(statusInterval);
+                    document.getElementById('status').innerHTML = getRandomStatusMessage(current_generation_state);
+                    statusInterval = setInterval(() => {
+                        document.getElementById('status').innerHTML = getRandomStatusMessage(current_generation_state);
+                    }, 10000);
+                    const detailedStatus = document.getElementById('detailedStatus');
+                    if (current_generation_state == "outline") detailedStatus.innerHTML = 'Generating story outline...';
+                    else if (current_generation_state == "content") detailedStatus.innerHTML = 'Generating story content...';
+                    else if (current_generation_state == "images") detailedStatus.innerHTML = 'Generating image descriptions...';
+                }
+            } else if (response.status == "outline") {
+                document.getElementById('outlineContainer').style.display = 'flex';
+                document.getElementById('outlineStatus').innerHTML = `${getRandomStatusMessage('outline_details')}`;
+                document.getElementById('title').innerHTML = `${response.output.title}`;
+                document.getElementById('setting').innerHTML = `${response.output.setting}`;
+                for (const name in response.output.characters) {
+                    if (Object.hasOwnProperty.call(response.output.characters, name)) {
+                        document.getElementById('characters').innerHTML += `<p class="mt-2"><span>${stripNonLettersFromEnd(name)}</span><br /><span class="italic">${response.output.characters[name]}</span></p>`;
+                    }
+                }
+            } else if (response.status == "story_lines") {
+                for (let i = 0; i < response.output.length; i++) {
+                    document.getElementById('storyContent').innerHTML += `
+                        <div class="story-line" id="page-${i + 1}">
+                            <p><b>Page ${i + 1}:</b>  ${response.output[i]}</p><br />
+                        </div>`;
+                }
+            } else if (response.status == "image_gen_ready") {
+                const image = document.getElementById(`page-${response.output.page}-image`);
+                image.src = response.output.url;
+            }
+        };
+    </script>
+</body>
+
+</html>

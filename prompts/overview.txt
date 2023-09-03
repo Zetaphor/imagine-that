@@ -1,0 +1,4 @@
+1 - Generate story outline
+2 - Generate a paragraph for each section in the outline
+3 - From each paragraph extract description of the primary scene
+4 - For each scene description generate image prompt

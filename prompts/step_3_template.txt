@@ -1,0 +1,3 @@
+Here is the information you will need to complete this task:
+
+{story_lines}

@@ -1,0 +1,21 @@
+.story-line {
+  margin: 2rem;
+}
+
+.my-page {
+  border: 1px solid black;
+}
+
+.even-page {
+  background-color: antiquewhite;
+  color: #000;
+}
+
+.odd-page {
+  background-color: #333;
+  color: #FFF;
+}
+
+#outlineContainer {
+  display: none;
+}

@@ -1,0 +1,9 @@
+Here are the details for the child:
+
+- Name: {name}
+- Guardian: {guardian}
+- Age: {age}
+- Illness: {illness}
+- Hope: {hope}
+- Fear: {fear}
+
