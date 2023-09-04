@@ -16,6 +16,20 @@
   color: #FFF;
 }
 
-#outlineContainer {
+#outlineContainer, #statusContainer {
   display: none;
+}
+
+@keyframes move {
+  from {
+      background-position: 200% 0;
+  }
+  to {
+      background-position: -200% 0;
+  }
+}
+
+.gradient-move {
+  background-size: 200% 100%;
+  animation: move 10s linear infinite;
 }

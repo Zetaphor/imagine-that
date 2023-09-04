@@ -48,23 +48,42 @@
     </form>
 
 
-    <div class="w-full">
+    <div id="statusContainer" class="w-full">
         <h2 id="status" class="mt-10 text-2xl text-center"></h2>
-        <h4 id="detailedStatus" class="mt-5 text-md italic text-stone-700 text-center"></h4>
+
+        <div class="max-w-md mx-auto mt-5">
+            <div id="generationProgress" class="bg-gray-300 h-6 rounded-lg overflow-hidden relative">
+                <div id="progressBar" class="h-full relative bg-gradient-to-r from-violet-300 via-violet-600 to-violet-300 gradient-move border-2 border-gray-900 rounded-lg"
+                    style="width: 25%;">
+                    <span id="progressLabel" class="absolute inset-0 flex items-center justify-center text-white font-bold">Step 1 of
+                        4</span>
+                </div>
+            </div>
+        </div>
+
+        <h4 id="detailedStatus" class="mt-5 text-md italic text-stone-700 text-center">
+        </h4>
     </div>
 
     <div id="outlineContainer" class="w-full mt-10 mb-5 flex justify-center">
         <div class="max-w-xl w-full">
-            <h2 class="w-full mt-10 text-lg text-center" id="outlineStatus"></h2>
-            <h4 class="w-full mt-5 text-2xl font-bold text-center" id="title"></h4>
-            <h4 class="w-full mt-5 text-lg text-center underline">Setting</h4>
-            <h4 class="w-full text-md text-center" id="setting"></h4>
-            <h4 class="w-full mt-5 text-lg text-center underline">Characters</h4>
-            <h4 class="w-full text-md text-center" id="characters"></h4>
+            <div class="border rounded-lg mb-4 overflow-hidden">
+                <div id="detailsAccordion" class="bg-gray-200 p-4 cursor-pointer accordion-header text-center">
+                    Click Here To Peek Under The Hood
+                </div>
+                <div class="p-4 accordion-content hidden">
+                    <h4 class="w-full mt-5 text-md text-center" id="detailsStatus"></h4>
+                    <h4 class="w-full mt-5 text-md font-bold text-center" id="title"></h4>
+                    <h4 class="w-full mt-5 text-md text-center underline">Setting</h4>
+                    <h4 class="w-full text-sm text-center" id="setting"></h4>
+                    <h4 class="w-full mt-5 text-md text-center underline">Characters</h4>
+                    <h4 class="w-full text-sm text-center" id="characters"></h4>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="book">
+    <!-- <div id="book">
         <div class="my-page even-page" data-density="hard">
             Page Cover
         </div>
@@ -89,6 +108,7 @@
         const nameInput = document.getElementById('name');
         let current_generation_state = null;
         let statusInterval = null;
+        const totalSteps = 4;
 
         const status_messages = {
             "outline": [
@@ -104,13 +124,6 @@
                 "Whispering secrets to story sprites for a plot worth its weight in gold!",
                 "Spinning our idea wheel. Hang on, inspiration incoming!",
                 "Plot-brewing in progress... Hope the story goblins don't toss in any unexpected ingredients!",
-            ],
-            "outline_details": [
-                "Awesome! Your story outline is ready. We've picked a magical setting and some characters who are already arguing about who gets to be the hero!",
-                "Conjuring magical worlds... Just finalized our title, met some quirky characters, and picked the perfect spot for our tale. Hold on, the enchantment's about to begin!",
-                "Cookin' up a magical tale! Here's a sneak peek of our recipe: title, setting, and characters! Hungry for the story? Just a moment!",
-                "Hang tight! The magic quill is just setting the stage, naming our heroes, and dreaming up far-off places. Your storybook is taking shape!",
-                "Cooking up an enchanting outline! Hang tight, our magical bookworms are introducing the title, setting, and characters...",
             ],
             "content": [
                 "Once upon a time, in a land of zeros and ones, your story is being woven...",
@@ -140,6 +153,21 @@
                 "Dipping brushes into dreams and painting your visual journey!",
                 "Image elves at work: Crafting scenes, one sprinkle of wonder at a time!"
             ]
+        }
+
+        document.getElementById('detailsAccordion').addEventListener('click', function () {
+            const content = this.nextElementSibling;
+            content.classList.toggle('hidden');
+        });
+
+        function updateProgressbarStep(progressStep) {
+            let progress = Math.floor(progressStep / totalSteps * 100);
+            if (progressStep === totalSteps) {
+                document.getElementById('progressLabel').innerText = `Finished!`;
+            } else {
+                document.getElementById('progressLabel').innerText = `Step ${progressStep} of ${totalSteps}`;
+            }
+            document.getElementById('progressBar').style.width = progress + '%';
         }
 
         function getRandomStatusMessage(key) {
@@ -183,6 +211,8 @@
             };
 
             ws.send(JSON.stringify(formData));
+            document.getElementById('statusContainer').style.display = 'block';
+            updateProgressbarStep(1);
         }
 
         ws.onmessage = function (event) {
@@ -211,8 +241,9 @@
                     else if (current_generation_state == "images") detailedStatus.innerHTML = 'Generating image descriptions...';
                 }
             } else if (response.status == "outline") {
+                updateProgressbarStep(2);
                 document.getElementById('outlineContainer').style.display = 'flex';
-                document.getElementById('outlineStatus').innerHTML = `${getRandomStatusMessage('outline_details')}`;
+                document.getElementById('detailsStatus').innerHTML = "We've generated the story outline and are now working on the story content.<br /><br />Here's are the details so far:";
                 document.getElementById('title').innerHTML = `${response.output.title}`;
                 document.getElementById('setting').innerHTML = `${response.output.setting}`;
                 for (const name in response.output.characters) {
