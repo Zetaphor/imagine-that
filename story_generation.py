@@ -10,9 +10,12 @@ from util import read_file_content, replace_text, send_openai_message
 
 MAX_RETRIES = 3
 SD_URL = "http://127.0.0.1:7860"
+context = []
 
 # Step 1 - Generate outline
 async def generate_outline(data):
+    global context
+    context = []
     for attempt in range(MAX_RETRIES):
         try:
             print(f"Generating outline attempt {attempt + 1}/{MAX_RETRIES}")
@@ -20,7 +23,7 @@ async def generate_outline(data):
             template = read_file_content('prompts/step_1_template.txt')
             for key, value in data.items():
                 template = replace_text(template, f"{{{key}}}", value)
-            story_outline = await send_openai_message(prompt, template, 'generate_outline')
+            story_outline, context = await send_openai_message(prompt, template, 'generate_outline')
 
             title, setting, characters = extract_outline_data(story_outline)
             return story_outline, title, setting, characters
@@ -59,13 +62,14 @@ def extract_outline_data(story_outline):
 
 # Step 2 - Generate story content
 async def generate_story_content(story_outline):
+    global context
     for attempt in range(MAX_RETRIES):
         try:
             print(f"Generating story content attempt {attempt + 1}/{MAX_RETRIES}")
             prompt = read_file_content('prompts/step_2_prompt.txt')
             template = read_file_content('prompts/step_2_template.txt')
             template = replace_text(template, "{story_outline}", story_outline)
-            story_lines = await send_openai_message(prompt, template, 'generate_story_lines')
+            story_lines, context = await send_openai_message(prompt, template, 'generate_story_lines', context)
             # The prompt calls for +++ but we should prepare for formatting errors
             processed_lines = story_lines.split('+')
             # Get rid of empty lines or lines that contain a leftover +
@@ -77,6 +81,7 @@ async def generate_story_content(story_outline):
 
 # Step 3 - Generate image descriptions
 async def generate_image_descriptions(story_lines):
+    global context
     for attempt in range(MAX_RETRIES):
         try:
             print(f"Generating image descriptions attempt {attempt + 1}/{MAX_RETRIES}")
@@ -85,7 +90,7 @@ async def generate_image_descriptions(story_lines):
             prompt = read_file_content('prompts/step_3_prompt.txt')
             template = read_file_content('prompts/step_3_template.txt')
             template = replace_text(template, "{story_lines}", story_lines)
-            image_descriptions = await send_openai_message(prompt, template, 'generate_image_descriptions')
+            image_descriptions, context = await send_openai_message(prompt, template, 'generate_image_descriptions', context)
             return image_descriptions
         except Exception as e:
             print(f"Error in generate_image_descriptions: {e}")
@@ -93,13 +98,14 @@ async def generate_image_descriptions(story_lines):
 
 # Step 4 - Generate Stable Diffusion prompts
 async def generate_sd_prompts(image_descriptions):
+    global context
     for attempt in range(MAX_RETRIES):
         try:
             print(f"Generating Stable Diffusion prompts attempt {attempt + 1}/{MAX_RETRIES}")
             prompt = read_file_content('prompts/step_4_prompt.txt')
             template = read_file_content('prompts/step_4_template.txt')
             template = replace_text(template, "{image_descriptions}", image_descriptions)
-            sd_prompts = await send_openai_message(prompt, template, 'generate_sd_prompts')
+            sd_prompts, context = await send_openai_message(prompt, template, 'generate_sd_prompts', context)
 
             processed_prompts = sd_prompts.split('\n')
             processed_prompts = [prompt.strip() for prompt in processed_prompts if prompt.strip()]

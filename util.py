@@ -14,19 +14,19 @@ def read_file_content(file_path):
 def replace_text(template_string, placeholder, replacement):
     return template_string.replace(placeholder, replacement)
 
-async def send_openai_message(prompt, template, tag, context=None):
-  messages = [
+async def send_openai_message(prompt, template, tag, existing_context=None):
+  chat_context = [
     {"role": "system", "content": prompt},
     {"role": "user", "content": template}
   ]
 
-  if context:
-     messages = context.extend(messages)
+  if existing_context:
+     chat_context = existing_context + chat_context
 
   completion = openai.ChatCompletion.create(
       model="gpt-4",
-      messages=messages,
+      messages=chat_context,
       pl_tags=[tag]
   )
 
-  return completion.choices[0].message['content']
+  return completion.choices[0].message['content'], chat_context
