@@ -24,14 +24,14 @@ async def ws():
         else:
           await websocket.send(json.dumps({"status": "outline", "output": {"title": title, "setting": setting, "characters": characters}}))
 
-        # # Step 2 - Generate story content
+        # Step 2 - Generate story content
         await websocket.send(json.dumps({"status": "generating", "output": "content"}))
-        # story_lines = await story_generation.generate_story_content(story_outline)
-        # if not story_lines:
-        #     await websocket.send(json.dumps({"status": "error", "output": f"Failed to generate story content after {story_generation.MAX_RETRIES} retries"}))
-        #     return
-        # else:
-        #   await websocket.send(json.dumps({"status": "story_lines", "output": story_lines}))
+        story_lines = await story_generation.generate_story_content(story_outline)
+        if not story_lines:
+            await websocket.send(json.dumps({"status": "error", "output": f"Failed to generate story content after {story_generation.MAX_RETRIES} retries"}))
+            return
+        else:
+          await websocket.send(json.dumps({"status": "story_lines", "output": story_lines}))
 
         print('Story generation complete')
         # await websocket.send(json.dumps({"status": "complete", "output": "complete"}))
