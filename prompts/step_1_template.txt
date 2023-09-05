@@ -6,4 +6,3 @@ Here are the details for the child:
 - Illness: {illness}
 - Hope: {hope}
 - Fear: {fear}
-
