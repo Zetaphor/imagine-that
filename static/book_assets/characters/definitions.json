@@ -1,0 +1,11 @@
+{
+  "heroes": [
+    "hero.png"
+  ],
+  "sidekicks": [
+    "sidekick.png"
+  ],
+  "villains": [
+    "villain.png"
+  ]
+}
