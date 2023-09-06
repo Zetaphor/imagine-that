@@ -2,17 +2,22 @@ from PIL import Image
 import numpy as np
 import cv2
 
-def apply_color_threshold(image_path: str, target_color: tuple, threshold: int) -> Image:
-    """
-    Apply a color threshold to an image.
+def hex_to_rgb(hex_color: str) -> tuple:
+    hex_color = hex_color.lstrip('#')
+    return (int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16))
 
-    Parameters:
-    - image_path: Path to the input image.
-    - target_color: Tuple representing the target RGB color.
-    - threshold: Integer value representing the color threshold.
+def extract_mask(image_path: str, target_color: tuple, threshold: int) -> Image:
+    """
+    Extracts a mask from an image. Requires a target color for the mask and a threshold value for color sensitivity.
+    So far a threshold of 1 seems to work with the Oneformer Coco preprocessor.
+
+    Args:
+        image_path (str): Path to the image.
+        target_color (tuple): Target color for the mask.
+        threshold (int): Threshold value for color sensitivity.
 
     Returns:
-    - Image object with the threshold applied.
+        Image: The extracted mask.
     """
     img = Image.open(image_path)
     img = img.convert("RGBA")
@@ -28,14 +33,14 @@ def apply_color_threshold(image_path: str, target_color: tuple, threshold: int) 
 
     return Image.fromarray(data)
 
-def extract_image_using_mask(source_img: np.ndarray, mask_img: Image, output_path=None) -> np.ndarray:
+def extract_image_using_mask(source_img: np.ndarray, mask_img: Image, output_path) -> np.ndarray:
     """
-    Extracts an image based on a provided mask.
+    Extracts an image based on a provided mask. The output image will be cropped with a transparent background.
 
     Args:
         source_img (numpy.ndarray): Source image array.
         mask_img (Image): Mask image object.
-        output_path (str, optional): Path to save the extracted image. If None, the image will not be saved.
+        output_path (str): Path to save the extracted image.
 
     Returns:
         numpy.ndarray: The extracted and cropped image.
@@ -64,18 +69,23 @@ def extract_image_using_mask(source_img: np.ndarray, mask_img: Image, output_pat
         x, y, w, h = cv2.boundingRect(largest_contour)
         extracted_img = extracted_img[y:y+h, x:x+w]
 
-    if output_path:
-        save_with_transparency(extracted_img, binary_mask[y:y+h, x:x+w], output_path)
+    save_with_transparency(extracted_img, binary_mask[y:y+h, x:x+w], output_path)
 
     return extracted_img
 
-def hex_to_rgb(hex_color: str) -> tuple:
-    hex_color = hex_color.lstrip('#')
-    return (int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16))
-
 def process_and_extract(source_image_path: str, mask_image_path: str, target_color: str, threshold: int, output_path: str):
-    mask_img = apply_color_threshold(mask_image_path, hex_to_rgb(target_color), threshold)
+    """
+    Extracts an image based on a provided mask. The output image will be cropped with a transparent background.
+
+    Args:
+        source_image_path (str): Path to the source image.
+        mask_image_path (str): Path to the mask image.
+        target_color (str): Target color for the mask.
+        threshold (int): Threshold value for color sensitivity.
+        output_path (str): Path to save the extracted image.
+    """
+    mask_img = extract_mask(mask_image_path, hex_to_rgb(target_color), threshold)
     source_img = cv2.imread(source_image_path, cv2.IMREAD_COLOR)
     extract_image_using_mask(source_img, mask_img, output_path)
 
-process_and_extract("image test/source image.png", "image test/mask.png", "#96053D", 1, "output.png")
+process_and_extract("image_test/source image.png", "image_test/mask.png", "#96053D", 1, "process-segmentation-output.png")
