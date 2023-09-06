@@ -78,4 +78,4 @@ def process_and_extract(source_image_path: str, mask_image_path: str, target_col
     source_img = cv2.imread(source_image_path, cv2.IMREAD_COLOR)
     extract_image_using_mask(source_img, mask_img, output_path)
 
-process_and_extract("source image.png", "mask.png", "#96053D", 1, "output.png")
+process_and_extract("image test/source image.png", "image test/mask.png", "#96053D", 1, "output.png")
