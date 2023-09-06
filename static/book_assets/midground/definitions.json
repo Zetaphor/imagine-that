@@ -1,5 +1,24 @@
 {
-  "desert": "desert.png",
+  "desert": {
+    "image": "desert.png",
+    "layouts": [
+      {
+        "name": "wide-angle",
+        "hero": {
+          "x": 0,
+          "y": 0
+        },
+        "villain": {
+          "x": 0,
+          "y": 0
+        },
+        "sidekick": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    ]
+  },
   "grassy-hills": "grassy-hills.png",
   "mountain": "mountain.png",
   "snow": "snow.png"

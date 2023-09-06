@@ -1,11 +1,14 @@
 {
-  "heroes": [
-    "hero.png"
+  "hero": [
+    "hero.png",
+    "hero2.png"
   ],
-  "sidekicks": [
-    "sidekick.png"
+  "sidekick": [
+    "sidekick.png",
+    "sidekick2.png"
   ],
-  "villains": [
-    "villain.png"
+  "villain": [
+    "villain.png",
+    "villain2.png"
   ]
 }
