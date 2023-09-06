@@ -95,5 +95,5 @@ def process_and_extract(source_image_path: str, mask_image_path: str, target_col
     result_image = extract_image_using_mask(source_img, mask_img, crop)
     cv2.imwrite(output_path, result_image)
 
-# process_and_extract("../image_test/source image.png", "../image_test/mask.png", "#96053D", 1, "process-segmentation-output.png", True)
+# process_and_extract("../test_images/villain-generation.jpg", "../test_images/villain-segmentation.png", "#96053D", 1, "process-segmentation-output.png", True)
 # process_and_extract("../image_test/mountain.jpg", "../image_test/mountain-segmentation.png", "#40AA40", 1, "process-segmentation-output.png", False)
