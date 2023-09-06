@@ -8,7 +8,8 @@ def hex_to_rgb(hex_color: str) -> tuple:
 
 def extract_mask(image_path: str, target_color: tuple, threshold: int) -> Image:
     """
-    Extracts a mask from an image. Requires a target color for the mask and a threshold value for color sensitivity.
+    Extracts a mask segment from a segmentation map and returns it on a transparent background.
+    Requires a target color for the mask and a threshold value for color sensitivity.
     So far a threshold of 1 seems to work with the Oneformer Coco preprocessor.
 
     Args:
@@ -35,7 +36,7 @@ def extract_mask(image_path: str, target_color: tuple, threshold: int) -> Image:
 
 def extract_image_using_mask(source_img: np.ndarray, mask_img: Image, output_path) -> np.ndarray:
     """
-    Extracts an image based on a provided mask. The output image will be cropped with a transparent background.
+    Extracts an image based on a provided extracted mask. The output image will be cropped with a transparent background.
 
     Args:
         source_img (numpy.ndarray): Source image array.
@@ -88,4 +89,4 @@ def process_and_extract(source_image_path: str, mask_image_path: str, target_col
     source_img = cv2.imread(source_image_path, cv2.IMREAD_COLOR)
     extract_image_using_mask(source_img, mask_img, output_path)
 
-process_and_extract("image_test/source image.png", "image_test/mask.png", "#96053D", 1, "process-segmentation-output.png")
+# process_and_extract("image_test/source image.png", "image_test/mask.png", "#96053D", 1, "process-segmentation-output.png")
