@@ -10,7 +10,7 @@
 
 <body>
     <div class="w-full mt-10 mb-5 flex justify-center">
-        <span class="bg-violet-900 text-stone-200 rounded-lg mx-auto text-2xl font-bold p-4">MRM Imagine That
+        <span class="mrm-purple text-white rounded-lg mx-auto text-2xl font-bold p-4">MRM Imagine That
             Demo</span>
     </div>
 
@@ -49,11 +49,12 @@
 
 
     <div id="statusContainer" class="w-full">
-        <h2 id="status" class="mt-10 text-2xl text-center"></h2>
+        <h4 id="detailedStatus" class="mt-10 text-2xl text-center">
+        </h4>
 
         <div class="max-w-md mx-auto mt-5">
             <div id="generationProgress" class="bg-gray-300 h-6 rounded-lg overflow-hidden relative">
-                <div id="progressBar" class="h-full relative bg-gradient-to-r from-violet-300 via-violet-600 to-violet-300 gradient-move border-2 border-gray-900 rounded-lg"
+                <div id="progressBar" class="h-full relative mrm-purple border-2 border-gray-900 rounded-lg"
                     style="width: 25%;">
                     <span id="progressLabel" class="absolute inset-0 flex items-center justify-center text-white font-bold">Step 1 of
                         4</span>
@@ -61,8 +62,7 @@
             </div>
         </div>
 
-        <h4 id="detailedStatus" class="mt-5 text-md italic text-stone-700 text-center">
-        </h4>
+        <h2 id="status" class="mt-5 text-md italic text-stone-700 text-center"></h2>
     </div>
 
     <div id="outlineContainer" class="w-full mt-10 mb-5 flex justify-center">
@@ -72,12 +72,12 @@
                     Click Here To Peek Under The Hood
                 </div>
                 <div class="p-4 accordion-content hidden">
-                    <h4 class="w-full mt-5 text-md text-center" id="detailsStatus"></h4>
-                    <h4 class="w-full mt-5 text-md font-bold text-center" id="title"></h4>
-                    <h4 class="w-full mt-5 text-md text-center underline">Setting</h4>
-                    <h4 class="w-full text-sm text-center" id="setting"></h4>
-                    <h4 class="w-full mt-5 text-md text-center underline">Characters</h4>
-                    <h4 class="w-full text-sm text-center" id="characters"></h4>
+                    <h4 class="w-full mt-5 text-md" id="detailsStatus"></h4>
+                    <h4 class="w-full mt-5 text-md font-bold" id="title"></h4>
+                    <h4 class="w-full mt-5 text-md underline">Setting</h4>
+                    <h4 class="w-full text-sm" id="setting"></h4>
+                    <h4 class="w-full mt-5 text-md underline">Characters</h4>
+                    <h4 class="w-full text-sm" id="characters"></h4>
                 </div>
             </div>
         </div>
