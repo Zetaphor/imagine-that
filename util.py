@@ -23,11 +23,16 @@ async def send_openai_message(prompt, template, tag, existing_context=None):
   if existing_context:
      chat_context = existing_context + chat_context
 
+  # We can't use the 4096 context length models until we refactor the prompting to only feed a few paragraphs at a time
   completion = openai.ChatCompletion.create(
-    #   model="gpt-3.5-turbo",
+      # model="gpt-3.5-turbo",
       # model="gpt-3.5-turbo-16k",
-      model="gpt-4",
-    #   model="gpt-4-32k",
+      # model="gpt-3.5-turbo-0613",
+      model="gpt-3.5-turbo-16k-0613",
+      # model="gpt-4",
+      # model="gpt-4-32k",
+      # model="gpt-4-0613",
+      # model="gpt-4-32k-0613",
       messages=chat_context,
       pl_tags=[tag]
   )
