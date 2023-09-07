@@ -83,33 +83,43 @@
         </div>
     </div>
 
-    <!-- <div id="book">
-        <div class="my-page even-page" data-density="hard">
-            Page Cover
+    <div id="book">
+        <!-- <div class="my-page text-" data-density="hard">
+            <img src="static/storybooks/2023-09-06_23-01-54/complete_page-1.png">
+            Once upon a time in a small suburban town, there lived a brave and imaginative 13-year-old boy named Kyle. Kyle loved spending his time in the peaceful park, where he would often daydream and let his imagination soar. However, Kyle's world was about to change when he noticed a mysterious black cloud hovering above the town, casting a shadow of chaos and despair.
         </div>
-        <div class="my-page odd-page" data-density="soft">
-            Page one
+        <div class="my-page" data-density="soft">
+            <img src="static/storybooks/2023-09-06_23-01-54/complete_page-2.png">
+            As Kyle observed the turmoil caused by the dark cloud, he couldn't help but feel a deep connection between the chaos and his own struggle with illness. Determined to understand more, he set off on an exploration through the park. It was there that he stumbled upon a wounded bird with a tangled wing. Instantly, he felt a resonance with the bird's helplessness, recognizing that just like him, the bird needed healing to regain its freedom.
         </div>
-        <div class="my-page even-page" data-density="soft">
-            Page two
+        <div class="my-page" data-density="soft">
+            <img src="static/storybooks/2023-09-06_23-01-54/complete_page-3.png">
+            Fuelled by empathy and a strong desire to overcome his illness, Kyle made a vow to confront the dark cloud and defeat the sorcerer behind it: Drakos. He knew that by conquering Drakos, he could also conquer his own illness. Seeking guidance, Kyle introduced the wounded bird to his loving and supportive grandfather, Donald. As a guardian through Kyle's medical journey, Donald possessed wisdom and knowledge about magic.
         </div>
-        <div class="my-page odd-page" data-density="soft">
-            Page three
+        <div class="my-page" data-density="soft">
+            <img src="static/storybooks/2023-09-06_23-01-54/complete_page-4.png">
+            Donald explained to Kyle that Drakos drew power from fear and uncertainty. He taught Kyle strategies to combat Drakos and gifted him a magical amulet to protect him on his journey. With newfound knowledge and a symbol of strength, Kyle felt ready to face the challenges ahead.
         </div>
-        <div class="my-page even-page" data-density="soft">
-            Page four
+        <div class="my-page" data-density="soft">
+            <img src="static/storybooks/2023-09-06_23-01-54/complete_page-5.png">
+            Throughout their adventure, Kyle and Donald encountered various obstacles set up by Drakos. They braved through physical barriers in a mystical forest, testing their resilience and determination. In addition to physical trials, Drakos also used emotional tests to weaken them. Knowing Kyle's fear of spiders, Drakos conjured giant spiders as his minions, hoping to exploit Kyle's vulnerability. However, with the guidance of Donald and his amulet, Kyle found the inner strength to face his fear and resist Drakos' attempts to weaken him.
         </div>
-        <div class="my-page odd-page" data-density="hard">
-            Last page
+        <div class="my-page" data-density="hard">
+            <img src="static/storybooks/2023-09-06_23-01-54/complete_page-6.png">
+            In a climactic showdown, Kyle confronted Drakos and his fears head-on. With his newfound courage, he tapped into his inner strength and battled the sorcerer. As Kyle stood firm, his illness symbolized by Drakos began to lose its hold. The dark cloud dispersed, revealing a shining ray of light. Miraculously, as the cloud disappeared, the wounded bird's wing untangled, and it soared into the sky, representing Kyle's triumph and the possibility of his own healing.
         </div>
-    </div> -->
+        <div class="my-page" data-density="hard">
+            <img src="static/storybooks/2023-09-06_23-01-54/complete_page-7.png">
+            With the battle won, Kyle returned to his familiar town, forever changed by his courageous journey. While he acknowledged that his battle against his illness would continue, he was filled with renewed hope and a fortified spirit. Kyle knew that his journey was not over, but with deeper understanding, resilience, and a loving guardian by his side, he was ready to face the future with unwavering courage and determination.
+        </div> -->
+    </div>
 
     <script>
         const nameInput = document.getElementById('name');
         let current_generation_state = null;
         let statusInterval = null;
         const totalSteps = 4;
-        let story_lines = [];
+        var story_lines = [];
 
         const status_messages = {
             "outline": [
@@ -185,11 +195,31 @@
         const pageFlip = new St.PageFlip(document.getElementById('book'), {
             width: 400,
             height: 600,
+            minWidth: 400,
+            minHeight: 600,
+            size: "stretch",
+            autoSize: true,
             showCover: true
         });
+        // pageFlip.loadFromHTML(document.querySelectorAll('.my-page'));
 
-        function populateBook() {
-            // pageFlip.loadFromHTML(document.querySelectorAll('.my-page'));
+        function populateBook(folder) {
+            let bookHtml = ''
+            const bookEl = document.getElementById('book')
+
+            for (let i = 0; i < story_lines.length; i++) {
+                bookHtml += `
+                <div class="my-page" data-density="soft">
+                    <img src="/static/storybooks/${folder}/complete_page-${i + 1}.png">
+                    ${story_lines[i]}
+                </div>
+                `
+            }
+
+            bookEl.style.display = 'block';
+            bookEl.innerHTML = bookHtml;
+
+            pageFlip.loadFromHTML(document.querySelectorAll('.my-page'));
         }
 
         nameInput.addEventListener('blur', function () {
@@ -229,6 +259,8 @@
                 document.getElementById('status').style.display = 'none';
                 document.getElementById('detailedStatus').style.display = 'none';
                 document.getElementById('outlineContainer').style.display = 'none';
+                document.getElementById('statusContainer').style.display = 'none';
+                populateBook(response.output);
             } else if (response.status == "generating") {
                 if (current_generation_state != response.output) {
                     current_generation_state = response.output;
@@ -258,15 +290,7 @@
                 }
             } else if (response.status == "story_lines") {
                 story_lines = response.output;
-                // for (let i = 0; i < response.output.length; i++) {
-                //     document.getElementById('storyContent').innerHTML += `
-                //         <div class="story-line" id="page-${i + 1}">
-                //             <p><b>Page ${i + 1}:</b>  ${response.output[i]}</p><br />
-                //         </div>`;
-                // }
-            } else if (response.status == "image_gen_ready") {
-                const image = document.getElementById(`page-${response.output.page}-image`);
-                image.src = response.output.url;
+                console.log('Set story lines', story_lines);
             }
         };
     </script>

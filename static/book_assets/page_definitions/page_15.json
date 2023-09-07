@@ -1,0 +1,30 @@
+{
+  "backgrounds": "space",
+  "midground": "snow",
+  "characters": [
+    {
+      "zIndex": 3,
+      "type": "hero",
+      "position": {
+        "x": 52,
+        "y": 415
+      }
+    },
+    {
+      "zIndex": 2,
+      "type": "sidekick",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "zIndex": 1,
+      "type": "villain",
+      "position": {
+        "x": 180,
+        "y": 250
+      }
+    }
+  ]
+}
