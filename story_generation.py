@@ -70,6 +70,11 @@ async def generate_story_content(story_outline):
             template = replace_text(template, "{story_outline}", story_outline)
             story_lines, context = await send_openai_message(prompt, template, 'generate_story_lines', context)
             # The prompt calls for +++ but we should prepare for formatting errors
+
+            # Sometimes GPT-3.5 forgets to add the +++ between lines
+            if story_lines.count('+++') <= 3:
+                raise Exception('Failed to generate story content')
+
             processed_lines = story_lines.split('+')
             # Get rid of empty lines or lines that contain a leftover +
             processed_lines = [line.strip() for line in processed_lines if line.strip() and '+' not in line]
@@ -106,8 +111,9 @@ async def generate_sd_prompts(image_descriptions):
             template = replace_text(template, "{image_descriptions}", image_descriptions)
             sd_prompts, context = await send_openai_message(prompt, template, 'generate_sd_prompts', context)
 
-            processed_prompts = sd_prompts.split('\n')
+            processed_prompts = sd_prompts.split('+')
             processed_prompts = [prompt.strip() for prompt in processed_prompts if prompt.strip()]
+            print('Processed prompts length', len(processed_prompts))
             return processed_prompts
         except Exception as e:
             print(f"Error in generate_sd_prompts: {e}")
@@ -135,7 +141,7 @@ async def generate_images(processed_prompts):
             # TODO: We need to switch this to the LLM, this is a hack for the demo
             # mask = '/home/zetaphor/Code/imagine-that/test_images/mountain-segmentation.png'
             mask = random.choice(masks)
-            await generate_background_layers(mask, full_path, prompt, "(insect), (creatures), (text), (characters), (people), (humans), (animals), (person), (aerial view)", f"page_{index + 1}")
+            await generate_background_layers(mask, full_path, prompt, "(insect), (creature:1.2), (text), (characters:1.2), (people:1.2), (humans:1.2), (animals), (person:1.2), (aerial view)", f"page_{index + 1}")
             create_page_image(index + 1, full_path, "hero", "sidekick", "villain")
 
             print(f'Generated image {index + 1}/{len(processed_prompts)}')
