@@ -71,7 +71,7 @@ async def txt2img_segmentation(input_image_path, positive_prompt, negative_promp
         return image, mask
 
 
-def generate_image_from_mask(input_image_path, positive_prompt, negative_prompt=""):
+async def generate_image_from_mask(input_image_path, positive_prompt, negative_prompt=""):
     """
     Generates an image from a mask.
 
@@ -83,9 +83,9 @@ def generate_image_from_mask(input_image_path, positive_prompt, negative_prompt=
     Returns:
         Image: The generated image.
     """
-    return asyncio.run(txt2img_segmentation(input_image_path, positive_prompt, negative_prompt, True))
+    return await txt2img_segmentation(input_image_path, positive_prompt, negative_prompt, True)
 
-def generate_image_and_mask(input_image_path, positive_prompt, negative_prompt=""):
+async def generate_image_and_mask(input_image_path, positive_prompt, negative_prompt=""):
     """
     Generates an image from a mask.
 
@@ -97,12 +97,12 @@ def generate_image_and_mask(input_image_path, positive_prompt, negative_prompt="
     Returns:
         Image: The generated image.
     """
-    return asyncio.run(txt2img_segmentation(input_image_path, positive_prompt, negative_prompt, False))
+    return await txt2img_segmentation(input_image_path, positive_prompt, negative_prompt, False)
 
 # positive = 'illustration of a grassy field, masterpiece, trending on deviantart, (disney style:1.2), clouds'
 # negative = 'frame, people, humans, characters'
 
-# image = generate_image_from_mask('mountain-segmentation.png', positive, negative)
+# image = asyncio.run(generate_image_from_mask('mountain-segmentation.png', positive, negative))
 # image.save('image-from-mask.png')
 
 # image, mask = generate_image_and_mask('mountain.jpg', positive, negative)
