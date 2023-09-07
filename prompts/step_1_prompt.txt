@@ -15,13 +15,15 @@ Characters: A list of each character in the story with a one sentence descriptio
 - Villain - A representation of the child's real-world illness. Do not use the name of the actual illness.
 +++
 Plot Points:
-* Introduction - Establish the child's world and hint at their underlying real-world struggle. A disruption or sign of the Villain’s influence marks the start of the adventure.
-* Entity's Plight - Introduction to the an Entity in Need, showcasing the direct impact of the Villain's actions or dominance. The child resonates with the Entity's, sensing parallels to their own challenge.
-* Determination to Confront - The child, recognizing the Villain's representation of their own struggle, resolves to confront and overcome it.
-* Guardians' Wisdom - Child and Entity meet the child's guardian. They provide essential insights about the Villain's nature and offer strategies or tools to combat it. The childs guardian joins child and Entity on their adventure.
-* Challenges and Adversities - A series of obstacles set up by the Villain to deter the child: Physical barriers or trials. Intellectual or emotional traps, mirroring the child's real-world difficulties. Tests of character or determination.
-* Villain's Ploys - The Villain attempts to exploit the child's real-world vulnerabilities, further embodying the struggle. The child relies on lessons from their guardian and their own evolving strength to resist the Villain’s tactics.
-* Harnessing Inner Strength - A climax where the child confronts both the Villain and, symbolically, their real-world struggle. They draw from newfound insights, capabilities, and the support of their guardian.
-* Triumph and Healing - The Villain is subdued or transformed, symbolizing the child's control or acceptance of their personal challenge. The Entity in Need is restored or improved, reflecting the child's desired outcome or healing.
-* Conclusion - The child's return to their familiar world, now with deeper understanding and resilience. Acknowledgment of the ongoing nature of some battles, but with a renewed hope and fortified spirit.
+* Establish the child's world and hint at their underlying real-world struggle. A disruption or sign of the Villain’s influence marks the start of the adventure.
+* Introduction to the an Entity in Need, showcasing the direct impact of the Villain's actions or dominance. The child resonates with the Entity's, sensing parallels to their own challenge.
+* The child, recognizing the Villain's representation of their own struggle, resolves to confront and overcome it.
+* Child and Entity meet the child's guardian. They provide essential insights about the Villain's nature and offer strategies or tools to combat it. The childs guardian joins child and Entity on their adventure.
+* A series of obstacles set up by the Villain to deter the child: Physical barriers or trials. Intellectual or emotional traps, mirroring the child's real-world difficulties. Tests of character or determination.
+* The Villain attempts to exploit the child's real-world vulnerabilities, further embodying the struggle. The child relies on lessons from their guardian and their own evolving strength to resist the Villain’s tactics.
+* A climax where the child confronts both the Villain and, symbolically, their real-world struggle. They draw from newfound insights, capabilities, and the support of their guardian.
+* The Villain is subdued or transformed, symbolizing the child's control or acceptance of their personal challenge. The Entity in Need is restored or improved, reflecting the child's desired outcome or healing.
+* The child's return to their familiar world, now with deeper understanding and resilience. Acknowledgment of the ongoing nature of some battles, but with a renewed hope and fortified spirit.
 +++
+
+Do not include the title for each plot point. Only include the description of that plot point. Your plot points should not contain titles.
