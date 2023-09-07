@@ -4,6 +4,12 @@
 
 .my-page {
   border: 1px solid black;
+  background-color: #FFF;
+  background-image: url('paper-background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 }
 
 .even-page {

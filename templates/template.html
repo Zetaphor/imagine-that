@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="w-full mt-10 mb-5 flex justify-center">
+    <div id="header" class="w-full mt-10 mb-5 flex justify-center">
         <span class="mrm-purple text-white rounded-lg mx-auto text-2xl font-bold p-4">MRM Imagine That
             Demo</span>
     </div>
@@ -147,7 +147,7 @@
                 "Sewing together sentences, one magical thread at a time!",
                 "Hitching a ride on the Imagination Express. Next stop: Storyville!",
                 "Churning the story butter to spread on fresh fairy tale toast!",
-                "Shh... The tale-telling tree is dropping its narrative leaves. Gathering them now!",
+                "The tale-telling tree is dropping its narrative leaves. Gathering them now!",
                 "Setting our narrative compass, charting the course for an epic tale!",
             ],
             "images": [
@@ -194,9 +194,9 @@
 
         const pageFlip = new St.PageFlip(document.getElementById('book'), {
             width: 400,
-            height: 600,
+            height: 500,
             minWidth: 400,
-            minHeight: 600,
+            minHeight: 500,
             size: "stretch",
             autoSize: true,
             showCover: true
@@ -210,8 +210,8 @@
             for (let i = 0; i < story_lines.length; i++) {
                 bookHtml += `
                 <div class="my-page" data-density="soft">
-                    <img src="/static/storybooks/${folder}/complete_page-${i + 1}.png">
-                    ${story_lines[i]}
+                    <img class="w-full" src="/static/storybooks/${folder}/complete_page-${i + 1}.png">
+                    <p class="p-3">${story_lines[i]}</p>
                 </div>
                 `
             }
@@ -260,6 +260,7 @@
                 document.getElementById('detailedStatus').style.display = 'none';
                 document.getElementById('outlineContainer').style.display = 'none';
                 document.getElementById('statusContainer').style.display = 'none';
+                document.getElementById('header').style.display = 'none';
                 populateBook(response.output);
             } else if (response.status == "generating") {
                 if (current_generation_state != response.output) {
