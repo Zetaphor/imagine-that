@@ -5,6 +5,7 @@ import random
 from datetime import datetime
 from util import read_file_content, replace_text, send_openai_message
 from image_processing.generate_background_layers import generate_background_layers
+from generate_pages import create_page_image
 
 MAX_RETRIES = 3
 SD_URL = "http://127.0.0.1:7860"
@@ -134,7 +135,9 @@ async def generate_images(processed_prompts):
             # TODO: We need to switch this to the LLM, this is a hack for the demo
             # mask = '/home/zetaphor/Code/imagine-that/test_images/mountain-segmentation.png'
             mask = random.choice(masks)
-            await generate_background_layers(mask, full_path, prompt, "(insect), (creatures), (text), (characters), (people), (humans), (animals), (person)", f"page_{index + 1}")
+            await generate_background_layers(mask, full_path, prompt, "(insect), (creatures), (text), (characters), (people), (humans), (animals), (person), (aerial view)", f"page_{index + 1}")
+            create_page_image(index + 1, full_path, "hero", "sidekick", "villain")
+
             print(f'Generated image {index + 1}/{len(processed_prompts)}')
 
           print(f'Image generation complete!')

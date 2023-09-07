@@ -1,37 +1,29 @@
 {
-  "backgrounds": "any",
-  "midground": "any",
+  "backgrounds": "space",
+  "midground": "snow",
   "characters": [
-    {
-      "zIndex": 4,
-      "type": "hero",
-      "position": {
-        "x": 500,
-        "y": 650
-      }
-    },
     {
       "zIndex": 3,
       "type": "hero",
       "position": {
-        "x": 0,
-        "y": 557
+        "x": 52,
+        "y": 415
       }
     },
     {
       "zIndex": 2,
       "type": "sidekick",
       "position": {
-        "x": 650,
-        "y": 557
+        "x": 400,
+        "y": 400
       }
     },
     {
       "zIndex": 1,
       "type": "villain",
       "position": {
-        "x": 200,
-        "y": 200
+        "x": 180,
+        "y": 250
       }
     }
   ]
