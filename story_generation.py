@@ -71,11 +71,18 @@ async def generate_story_content(story_outline):
             story_lines, context = await send_openai_message(prompt, template, 'generate_story_lines', context)
             # The prompt calls for +++ but we should prepare for formatting errors
 
-            # Sometimes GPT-3.5 forgets to add the +++ between lines
-            if story_lines.count('+++') <= 3:
+            processed_lines = story_lines.split('+')
+
+            # This will break the image generation, sometimes the model just ignores our instructions
+            if 'Plot Points:' in story_lines:
                 raise Exception('Failed to generate story content')
 
-            processed_lines = story_lines.split('+')
+            # Sometimes GPT-3.5 forgets to add the +++ between lines
+            if len(processed_lines) <= 3:
+                processed_lines = story_lines.split('\n')
+                if len(processed_lines) <= 3:
+                    raise Exception('Failed to generate story content')
+
             # Get rid of empty lines or lines that contain a leftover +
             processed_lines = [line.strip() for line in processed_lines if line.strip() and '+' not in line]
             return processed_lines
@@ -112,8 +119,15 @@ async def generate_sd_prompts(image_descriptions):
             sd_prompts, context = await send_openai_message(prompt, template, 'generate_sd_prompts', context)
 
             processed_prompts = sd_prompts.split('+')
+
+            # Sometimes GPT-3.5 forgets to add the +++ between lines
+            if len(processed_prompts) <= 3:
+                processed_prompts = sd_prompts.split('\n')
+                if len(processed_prompts) <= 3:
+                    raise Exception('Failed to generate Stable Diffusion prompts')
+
             processed_prompts = [prompt.strip() for prompt in processed_prompts if prompt.strip()]
-            print('Processed prompts length', len(processed_prompts))
+            # print('Processed prompts length', len(processed_prompts))
             return processed_prompts
         except Exception as e:
             print(f"Error in generate_sd_prompts: {e}")
