@@ -16,7 +16,7 @@
   color: #FFF;
 }
 
-#outlineContainer, #statusContainer {
+#outlineContainer, #statusContainer, #book {
   display: none;
 }
 

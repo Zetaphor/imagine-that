@@ -25,8 +25,8 @@ async def send_openai_message(prompt, template, tag, existing_context=None):
 
   completion = openai.ChatCompletion.create(
     #   model="gpt-3.5-turbo",
-      model="gpt-3.5-turbo-16k",
-    #   model="gpt-4",
+      # model="gpt-3.5-turbo-16k",
+      model="gpt-4",
     #   model="gpt-4-32k",
       messages=chat_context,
       pl_tags=[tag]
