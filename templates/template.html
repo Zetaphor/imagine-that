@@ -109,6 +109,7 @@
         let current_generation_state = null;
         let statusInterval = null;
         const totalSteps = 4;
+        let story_lines = [];
 
         const status_messages = {
             "outline": [
@@ -187,14 +188,15 @@
             showCover: true
         });
 
-        // pageFlip.loadFromHTML(document.querySelectorAll('.my-page'));
+        function populateBook() {
+            // pageFlip.loadFromHTML(document.querySelectorAll('.my-page'));
+        }
 
         nameInput.addEventListener('blur', function () {
             document.getElementById('sendForm').innerText = `Generate ${nameInput.value}'s Storybook!`;
         });
 
         var ws = new WebSocket('ws://127.0.0.1:5000/ws');
-
         ws.onopen = function (event) {
             console.log("Connected to the websocket");
         };
@@ -234,11 +236,14 @@
                     document.getElementById('status').innerHTML = getRandomStatusMessage(current_generation_state);
                     statusInterval = setInterval(() => {
                         document.getElementById('status').innerHTML = getRandomStatusMessage(current_generation_state);
-                    }, 10000);
+                    }, 7000);
                     const detailedStatus = document.getElementById('detailedStatus');
                     if (current_generation_state == "outline") detailedStatus.innerHTML = 'Generating story outline...';
                     else if (current_generation_state == "content") detailedStatus.innerHTML = 'Generating story content...';
-                    else if (current_generation_state == "images") detailedStatus.innerHTML = 'Generating image descriptions...';
+                    else if (current_generation_state == "images") {
+                        updateProgressbarStep(3);
+                        detailedStatus.innerHTML = 'Generating images...';
+                    }
                 }
             } else if (response.status == "outline") {
                 updateProgressbarStep(2);
@@ -252,12 +257,13 @@
                     }
                 }
             } else if (response.status == "story_lines") {
-                for (let i = 0; i < response.output.length; i++) {
-                    document.getElementById('storyContent').innerHTML += `
-                        <div class="story-line" id="page-${i + 1}">
-                            <p><b>Page ${i + 1}:</b>  ${response.output[i]}</p><br />
-                        </div>`;
-                }
+                story_lines = response.output;
+                // for (let i = 0; i < response.output.length; i++) {
+                //     document.getElementById('storyContent').innerHTML += `
+                //         <div class="story-line" id="page-${i + 1}">
+                //             <p><b>Page ${i + 1}:</b>  ${response.output[i]}</p><br />
+                //         </div>`;
+                // }
             } else if (response.status == "image_gen_ready") {
                 const image = document.getElementById(`page-${response.output.page}-image`);
                 image.src = response.output.url;
