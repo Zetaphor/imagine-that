@@ -1,3 +1,4 @@
 __pycache__
 static/storybooks/*
 !static/storybooks/.gitkeep
+image_processing/tmp/*
