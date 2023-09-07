@@ -1,12 +1,10 @@
 import re
 import os
-import requests
-import io
-import base64
 import re
+import random
 from datetime import datetime
-from PIL import Image, PngImagePlugin
 from util import read_file_content, replace_text, send_openai_message
+from image_processing.generate_background_layers import generate_background_layers
 
 MAX_RETRIES = 3
 SD_URL = "http://127.0.0.1:7860"
@@ -124,31 +122,23 @@ async def generate_images(processed_prompts):
           os.makedirs(full_path, exist_ok=True)
           print(f'Created directory {full_path}')
 
+          # TODO: We need to switch this to the LLM, this is a hack for the demo
+          masks = [
+            '/home/zetaphor/Code/imagine-that/static/masks/grassy-hills-mask.png',
+            '/home/zetaphor/Code/imagine-that/static/masks/mountain-mask.png',
+            '/home/zetaphor/Code/imagine-that/static/masks/snow-mask.png',
+            '/home/zetaphor/Code/imagine-that/static/masks/desert-mask.png',
+          ]
+
           for index, prompt in enumerate(processed_prompts):
-              payload = {
-                  "prompt": prompt,
-                  "steps": 20
-              }
-
-              response = requests.post(url=f'{SD_URL}/sdapi/v1/txt2img', json=payload)
-              resp_data = response.json()
-              print(f'Generating image {index + 1}/{len(processed_prompts)}')
-
-              for i in resp_data['images']:
-                  image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-
-                  png_payload = {
-                      "image": "data:image/png;base64," + i
-                  }
-                  response2 = requests.post(url=f'{SD_URL}/sdapi/v1/png-info', json=png_payload)
-
-                  pnginfo = PngImagePlugin.PngInfo()
-                  pnginfo.add_text("parameters", response2.json().get("info"))
-                  image_save_path = os.path.join(full_path, f'page-{index + 1}.png')
-                  image.save(image_save_path, pnginfo=pnginfo)
-                  print(f'Generated image {index + 1}/{len(processed_prompts)}')
+            # TODO: We need to switch this to the LLM, this is a hack for the demo
+            # mask = '/home/zetaphor/Code/imagine-that/test_images/mountain-segmentation.png'
+            mask = random.choice(masks)
+            await generate_background_layers(mask, full_path, prompt, "(insect), (creatures), (text), (characters), (people), (humans), (animals), (person)", f"page_{index + 1}")
+            print(f'Generated image {index + 1}/{len(processed_prompts)}')
 
           print(f'Image generation complete!')
-          return
+          return current_time
         except Exception as e:
             print(f"Error in generate_images: {e}")
+

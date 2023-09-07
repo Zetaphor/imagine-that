@@ -1,8 +1,8 @@
 import os
-from identify_segmentations import get_segmentation_colors
-from process_segmentation import process_and_extract
+from image_processing.identify_segmentations import get_segmentation_colors
+from image_processing.process_segmentation import process_and_extract
 
-def separate_segmentation_layers(source_image, mask_image, output_dir, crop=False, threshold=2):
+def separate_segmentation_layers(source_image, mask_image, output_dir, crop=False, threshold=2, prefix=""):
   """
   Separate the layers of a segmentation mask.
 
@@ -15,7 +15,7 @@ def separate_segmentation_layers(source_image, mask_image, output_dir, crop=Fals
   filename = os.path.splitext(os.path.basename(source_image))[0]
   colors = get_segmentation_colors(mask_image, threshold)
   for index, (color, count) in enumerate(colors):
-    process_and_extract(source_image, mask_image, color, 1, f'{output_dir}/{filename}_{index + 1}.png', crop)
+    process_and_extract(source_image, mask_image, color, 1, f'{output_dir}/{prefix + "_" if len(prefix) else ""}{filename}_{index + 1}.png', crop)
     print(f'{output_dir}/{filename}_{index + 1}.png')
 
-# separate_segmentation_layers('../image_test/text2img_output.png', '../image_test/mountain-segmentation.png', './layers', 2)
+# separate_segmentation_layers('../image_test/text2img_output.png', '../image_test/mountain-segmentation.png', './layers', 2, "test")

@@ -1,5 +1,5 @@
-from stable_diffusion import generate_image_from_mask
-from separate_segmentation_layers import separate_segmentation_layers
+from image_processing.stable_diffusion import generate_image_from_mask
+from image_processing.separate_segmentation_layers import separate_segmentation_layers
 
 def generate_character(mask_path, output_dir, positive_prompt, negative_prompt=""):
   """

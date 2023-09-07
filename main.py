@@ -33,22 +33,24 @@ async def ws():
         else:
           await websocket.send(json.dumps({"status": "story_lines", "output": story_lines}))
 
+        # Step 3 - Generate image descriptions
+        await websocket.send(json.dumps({"status": "generating", "output": "images"}))
+        image_descriptions = await story_generation.generate_image_descriptions(story_lines)
+        if not image_descriptions:
+            await websocket.send(json.dumps({"status": "error", "output": f"Failed to generate image descriptions after {story_generation.MAX_RETRIES} retries"}))
+            return
+
+        # Step 4 - Generate Stable Diffusion prompts
+        sd_prompts = await story_generation.generate_sd_prompts(image_descriptions)
+        if not sd_prompts:
+            await websocket.send(json.dumps({"status": "error", "output": f"Failed to generate SD prompts after {story_generation.MAX_RETRIES} retries"}))
+            return
+
+        # Step 5 - Generate background layers
+        folder = await story_generation.generate_images(sd_prompts)
+
         print('Story generation complete')
-        # await websocket.send(json.dumps({"status": "complete", "output": "complete"}))
-
-        # # Step 3 - Generate image descriptions
-        # await websocket.send(json.dumps({"status": "generating", "output": "images"}))
-        # image_descriptions = await story_generation.generate_image_descriptions(story_lines)
-        # if not image_descriptions:
-        #     await websocket.send(json.dumps({"status": "error", "output": f"Failed to generate image descriptions after {story_generation.MAX_RETRIES} retries"}))
-        #     return
-
-        # # Step 4 - Generate Stable Diffusion prompts
-        # await websocket.send(json.dumps({"status": "generating", "output": "Generating Stable Diffusion prompts..."}))
-        # sd_prompts = await story_generation.generate_sd_prompts(image_descriptions)
-        # if not sd_prompts:
-        #     await websocket.send(json.dumps({"status": "error", "output": f"Failed to generate SD prompts after {story_generation.MAX_RETRIES} retries"}))
-        #     return
+        await websocket.send(json.dumps({"status": "complete", "output": folder}))
 
         # await websocket.send(json.dumps({"status": "generating", "output": "images"}))
         # await generate_images(sd_prompts)

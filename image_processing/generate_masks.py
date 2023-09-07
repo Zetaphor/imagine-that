@@ -42,4 +42,4 @@ async def generate_masks(input_dir, output_dir):
     image.save(os.path.join(output_dir, f"{os.path.splitext(file)[0]}_mask.png"))
 
 
-# asyncio.run(generate_masks('../test_images/mask_test', '../test_images/mask_test/output'))
+asyncio.run(generate_masks('../test_images/mask_test', '../test_images/mask_test/output'))
