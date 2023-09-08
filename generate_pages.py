@@ -59,30 +59,32 @@ def create_page_image(page_number, output_dir, hero=None, sidekick=None, villain
     #     mg_image = Image.open(mg_asset_path).convert("RGBA")
     #     canvas.paste(mg_image, (0, 0), mg_image)
 
-    sorted_characters = sorted(page_definition.get("characters", []), key=lambda x: x['zIndex'])
+    # TODO: This is a hack until for the demo
+    if page_number == 1 or page_number or page_number == 3 or page_number == 6:
+        sorted_characters = sorted(page_definition.get("characters", []), key=lambda x: x['zIndex'])
 
-    for char_def in sorted_characters:
-        char_type = char_def["type"]
-        char_asset_path = choose_asset("characters", char_type)
-        if char_type == "hero" and hero:
-            char_asset_path = choose_asset("characters", char_type, hero)
-        elif char_type == "sidekick" and sidekick:
-            char_asset_path = choose_asset("characters", char_type, sidekick)
-        elif char_type == "villain" and villain:
-            char_asset_path = choose_asset("characters", char_type, villain)
+        for char_def in sorted_characters:
+            char_type = char_def["type"]
+            char_asset_path = choose_asset("characters", char_type)
+            if char_type == "hero" and hero:
+                char_asset_path = choose_asset("characters", char_type, hero)
+            elif char_type == "sidekick" and sidekick:
+                char_asset_path = choose_asset("characters", char_type, sidekick)
+            elif char_type == "villain" and villain:
+                char_asset_path = choose_asset("characters", char_type, villain)
 
-        char_pos = char_def["position"]
-        # print('char_asset_path', char_asset_path)
-        if char_asset_path:
-            char_image = Image.open(char_asset_path).convert("RGBA")
+            char_pos = char_def["position"]
+            # print('char_asset_path', char_asset_path)
+            if char_asset_path:
+                char_image = Image.open(char_asset_path).convert("RGBA")
 
-            # TODO: This is a hack for the demo
-            scale_percent = 30
-            new_width = int(char_image.width * scale_percent / 100)
-            new_height = int(char_image.height * scale_percent / 100)
-            char_image = char_image.resize((new_width, new_height))
+                # TODO: This is a hack for the demo
+                scale_percent = 30
+                new_width = int(char_image.width * scale_percent / 100)
+                new_height = int(char_image.height * scale_percent / 100)
+                char_image = char_image.resize((new_width, new_height))
 
-            canvas.paste(char_image, (char_pos["x"], char_pos["y"]), char_image)
+                canvas.paste(char_image, (char_pos["x"], char_pos["y"]), char_image)
 
     canvas.save(os.path.join(output_dir, f"complete_page-{page_number}.png"), "PNG")
 
