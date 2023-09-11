@@ -1,9 +1,34 @@
+import os
+from dotenv import load_dotenv
 import io
 import cv2
 import base64
 import aiohttp
 from PIL import Image
-import asyncio
+
+load_dotenv()
+
+API_URL = os.environ.get("SD_API_URL")
+
+async def set_model(model):
+    model_list = {
+        "cartoonStyleClassic": "cartoonStyleClassic_v1.safetensors [f5a0c6e357]",
+        "sdBase": "v1-5-pruned-emaonly.safetensors [6ce0161689]"
+    }
+
+    model_name = model_list[model]
+    if model_name not in model_list:
+        raise ValueError(f"Invalid model name: {model_name}")
+
+    payload = {
+        "sd_model_checkpoint": model_name,
+    }
+
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url=f'{API_URL}/sdapi/v1/options', json=payload) as response:
+            if response.status != 200:
+                raise ValueError(f"Request failed with status {response.status}")
+            r = await response.json()
 
 async def txt2img_segmentation(input_image_path, positive_prompt, negative_prompt="", input_is_mask=False):
     """
@@ -19,8 +44,6 @@ async def txt2img_segmentation(input_image_path, positive_prompt, negative_promp
         Image: The generated image.
         Image (optional): The generated segmentation mask.
     """
-
-    API_URL = "http://127.0.0.1:7860"
 
     img = cv2.imread(input_image_path)
     retval, bytes = cv2.imencode('.png', img)

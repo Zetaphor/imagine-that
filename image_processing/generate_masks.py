@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import io
 import base64
 import aiohttp
@@ -6,7 +7,9 @@ import cv2
 from PIL import Image
 import asyncio
 
-API_URL = "http://127.0.0.1:7860"
+load_dotenv()
+
+API_URL = os.environ.get("SD_API_URL")
 
 async def generate_masks(input_dir, output_dir):
   """
@@ -42,4 +45,4 @@ async def generate_masks(input_dir, output_dir):
     image.save(os.path.join(output_dir, f"{os.path.splitext(file)[0]}_mask.png"))
 
 
-asyncio.run(generate_masks('../test_images/mask_test', '../test_images/mask_test/output'))
+# asyncio.run(generate_masks('../test_images/mask_test', '../test_images/mask_test/output'))
