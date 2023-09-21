@@ -73,6 +73,12 @@ async def generate_story_content(story_outline):
 
             processed_lines = story_lines.split('+')
 
+            # Sometimes GPT-3.5 forgets to add the +++ between lines
+            if len(processed_lines) <= 3:
+                processed_prompts = story_lines.split('\n')
+                if len(processed_prompts) <= 3:
+                    raise Exception('Failed to generate Stable Diffusion prompts')
+
             # This will break the image generation, sometimes the model just ignores our instructions
             if 'Plot Points:' in story_lines:
                 raise Exception('Failed to generate story content')
@@ -156,7 +162,7 @@ async def generate_images(processed_prompts):
             # mask = '/home/zetaphor/Code/imagine-that/test_images/mountain-segmentation.png'
             mask = random.choice(masks)
             await generate_background_layers(mask, full_path, prompt, "(insect), (creature:1.2), (text), (characters:1.2), (people:1.2), (humans:1.2), (animals), (person:1.2), (aerial view)", f"page_{index + 1}")
-            create_page_image(index + 1, full_path, "hero", "sidekick", "villain")
+            create_page_image(index + 1, full_path, "hero", "sidekick", "villain", len(processed_prompts))
 
             print(f'Generated image {index + 1}/{len(processed_prompts)}')
 
