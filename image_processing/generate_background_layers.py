@@ -22,4 +22,4 @@ async def generate_background_layers(mask_path, output_dir, positive_prompt, neg
 
 # positive = 'illustration of a grassy field, masterpiece, trending on deviantart, (disney style:1.2), clouds'
 # negative = 'frame, people, humans, characters'
-# asyncio.run(generate_background_layers('../test_images/mountain-segmentation.png', './tmp', positive, negative, "test"))
+# asyncio.run(generate_background_layers('../test_images/mountain-segmentation.png', '/tmp', positive, negative, "test"))
