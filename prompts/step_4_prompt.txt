@@ -53,3 +53,5 @@ On the next line the user will provide a sentence to use as the inspiration for 
 
 You are generating stable diffusion images for a childrens storybook. The visual style should be cartoonish and include terms like animation, flat shading, flat color illustration, clean lines.
 Only use words that would be associated with a cartoon illustration style.
+
+Each prompt should be separated by a new line and +++. Always include the +++ separator in between each prompt. You should never return a prompt without a separator.
