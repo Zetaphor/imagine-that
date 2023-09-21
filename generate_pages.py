@@ -34,7 +34,7 @@ def choose_asset(asset_type, asset_name, character_name=None):
     return None
 
 
-def create_page_image(page_number, output_dir, hero=None, sidekick=None, villain=None):
+def create_page_image(page_number, output_dir, hero=None, sidekick=None, villain=None, page_count=1):
     page_definitions_path = os.path.join(BASE_DIR, "page_definitions")
 
     with open(os.path.join(page_definitions_path, f"page_{page_number}.json"), 'r') as file:
@@ -60,19 +60,27 @@ def create_page_image(page_number, output_dir, hero=None, sidekick=None, villain
     #     canvas.paste(mg_image, (0, 0), mg_image)
 
     # TODO: This is a hack until for the demo
-    if page_number == 1 or page_number or page_number == 3 or page_number == 6:
-        sorted_characters = sorted(page_definition.get("characters", []), key=lambda x: x['zIndex'])
+    sorted_characters = sorted(page_definition.get("characters", []), key=lambda x: x['zIndex'])
 
-        for char_def in sorted_characters:
-            char_type = char_def["type"]
-            char_asset_path = choose_asset("characters", char_type)
-            if char_type == "hero" and hero:
-                char_asset_path = choose_asset("characters", char_type, hero)
-            elif char_type == "sidekick" and sidekick:
-                char_asset_path = choose_asset("characters", char_type, sidekick)
-            elif char_type == "villain" and villain:
-                char_asset_path = choose_asset("characters", char_type, villain)
+    for char_def in sorted_characters:
+        char_type = char_def["type"]
 
+        # Page 1 Hero and sidekick
+        # Page 2 Villain
+        # Page 3 Villain hero sidekick
+        # Page 4-end-1 landscape
+        # Page end all three
+
+        char_asset_path = None
+        if char_type == "hero" and hero and page_number in (1, 3, page_count):
+            char_asset_path = choose_asset("characters", char_type, hero)
+        elif char_type == "sidekick" and sidekick and page_number in (1, 3, page_count):
+            char_asset_path = choose_asset("characters", char_type, sidekick)
+        elif char_type == "villain" and villain and page_number in (2, 3):
+            print('Saw villain request, page', page_number)
+            char_asset_path = choose_asset("characters", char_type, villain)
+
+        if char_asset_path:
             char_pos = char_def["position"]
             # print('char_asset_path', char_asset_path)
             if char_asset_path:
