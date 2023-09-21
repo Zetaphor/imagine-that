@@ -29,3 +29,13 @@
 .mrm-purple {
   background-color: #9188FF;
 }
+
+.book-title {
+  position: absolute;
+  left: 0;
+  top: 10%;
+  font-size: 2.5rem;
+  color: #FFF;
+  width: 100%;
+  padding-left: 25%;
+}

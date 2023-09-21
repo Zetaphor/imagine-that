@@ -120,6 +120,7 @@
         let statusInterval = null;
         const totalSteps = 4;
         var story_lines = [];
+        var story_title = "";
 
         const status_messages = {
             "outline": [
@@ -210,6 +211,7 @@
             for (let i = 0; i < story_lines.length; i++) {
                 bookHtml += `
                 <div class="my-page" data-density="soft">
+                    <p class="book-title">${ i == 0 ? story_title: ''}</p>
                     <img class="w-full" src="/static/storybooks/${folder}/complete_page-${i + 1}.png">
                     <p class="p-3">${story_lines[i]}</p>
                 </div>
@@ -284,6 +286,7 @@
                 document.getElementById('detailsStatus').innerHTML = "We've generated the story outline and are now working on the story content.<br /><br />Here's are the details so far:";
                 document.getElementById('title').innerHTML = `${response.output.title}`;
                 document.getElementById('setting').innerHTML = `${response.output.setting}`;
+                story_title = response.output.title;
                 for (const name in response.output.characters) {
                     if (Object.hasOwnProperty.call(response.output.characters, name)) {
                         document.getElementById('characters').innerHTML += `<p class="mt-2"><span>${stripNonLettersFromEnd(name)}</span><br /><span class="italic">${response.output.characters[name]}</span></p>`;
