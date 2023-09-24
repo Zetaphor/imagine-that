@@ -28,6 +28,9 @@ async def generate_masks(input_dir, output_dir):
     encoded_image = base64.b64encode(bytes).decode('utf-8')
 
     payload = {
+      "width": img.shape[1],
+      "height": img.shape[0],
+      "controlnet_resize_mode": "Just Resize",
       "controlnet_module": "seg_ofcoco",
       "controlnet_input_images": [encoded_image],
       "controlnet_processor_res": 1024,
@@ -45,4 +48,4 @@ async def generate_masks(input_dir, output_dir):
     image.save(os.path.join(output_dir, f"{os.path.splitext(file)[0]}_mask.png"))
 
 
-# asyncio.run(generate_masks('../test_images/mask_test', '../test_images/mask_test/output'))
+# asyncio.run(generate_masks('../test_images/isolated_test', '../test_images/mask_test/output'))
